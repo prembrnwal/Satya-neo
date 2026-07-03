@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "./components/Header";
+import Header from "./components/layout/Header";
 import {HashRouter as Router,Routes,Route} from 'react-router-dom'
 import HomeScreen from "./components/screens/HomeScreen";
 import SignupScreen from "./components/screens/SignupScreen";
