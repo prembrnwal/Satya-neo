@@ -1,70 +1,468 @@
-# Getting Started with Create React App
+# 🛰️ Satya-neo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An AI-powered Satellite Image Analysis Platform that processes multi-modal Earth Observation (EO) data such as Sentinel-1 (SAR), Sentinel-2 (Optical), DEM, and GeoTIFF images to generate intelligent insights including cloud detection, NDVI, building detection, road extraction, vegetation mapping, terrain analysis, and analytics.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+# System Architecture
 
-### `npm start`
+```
+                        USER
+                          │
+                          ▼
+                  React Frontend
+                          │
+                          ▼
+                 Django REST API
+                          │
+                          ▼
+                Authentication Module
+                          │
+                          ▼
+                 Image Upload Service
+                          │
+                          ▼
+                GeoTIFF Validation
+                          │
+                          ▼
+              Metadata Extraction
+                          │
+                          ▼
+          Store Raw Satellite Images
+                          │
+                          ▼
+             Image Preprocessing
+      (Normalization, Resize, Tiling)
+                          │
+                          ▼
+              Cloud Detection Model
+                          │
+                          ▼
+               Cloud Removal Module
+                          │
+                          ▼
+        Multi-Modal Data Integration
+      ┌────────────┬─────────────┐
+      │            │             │
+      ▼            ▼             ▼
+ Sentinel-2     Sentinel-1       DEM
+ (Optical)         (SAR)      Elevation
+      │            │             │
+      ▼            ▼             ▼
+ Optical       SAR Encoder   DEM Encoder
+ Encoder
+      └────────────┬─────────────┘
+                   ▼
+          Multi-Modal Fusion
+                   │
+                   ▼
+          PyTorch AI Pipeline
+                   │
+      ┌────────────┼────────────┐
+      ▼            ▼            ▼
+ Building      Road         Vegetation
+ Detection    Detection       Mapping
+      │            │
+      ├────────────┤
+      ▼            ▼
+ Water Detection  NDVI Generation
+                   │
+                   ▼
+           Terrain Analysis
+                   │
+                   ▼
+        Post Processing Engine
+                   │
+                   ▼
+        GeoJSON / Raster Output
+                   │
+                   ▼
+         Analytics Generation
+                   │
+                   ▼
+          Report Generation
+                   │
+                   ▼
+        PostgreSQL + Object Storage
+                   │
+                   ▼
+             React Dashboard
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Complete Processing Pipeline
 
-### `npm test`
+## Phase 1 : User Authentication
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- User Login
+- Registration
+- JWT Authentication
+- Session Management
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Phase 2 : Image Upload
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Users can upload
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- GeoTIFF
+- TIFF
+- PNG
+- JPEG
 
-### `npm run eject`
+The upload service validates
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- File Extension
+- Coordinate Reference System (CRS)
+- Image Resolution
+- Number of Bands
+- File Integrity
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Phase 3 : Metadata Extraction
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Extract metadata using Rasterio/GDAL
 
-## Learn More
+Information extracted:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Width
+- Height
+- CRS
+- Projection
+- Bounds
+- Pixel Resolution
+- Number of Bands
+- Acquisition Date
+- Satellite Information
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Metadata is stored in PostgreSQL.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Phase 4 : Image Storage
 
-### Analyzing the Bundle Size
+Store
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```
+Raw Images
+Processed Images
+Prediction Masks
+GeoJSON Files
+Reports
+```
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Phase 5 : Image Preprocessing
 
-### Advanced Configuration
+Operations include
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Noise Removal
+- Image Normalization
+- Histogram Equalization
+- Band Selection
+- Image Resizing
+- Image Tiling
+- Cloud Mask Preparation
 
-### Deployment
+Output
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+AI Ready Tiles
+```
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Phase 6 : Cloud Detection
+
+Detect
+
+- Thin Clouds
+- Thick Clouds
+- Cloud Shadows
+
+Generate
+
+- Cloud Confidence Map
+- Cloud Mask
+
+---
+
+## Phase 7 : Cloud Removal
+
+Remove cloud-covered regions using
+
+- Historical Images
+- Multi-temporal Analysis
+
+Output
+
+```
+Cloud Free Satellite Image
+```
+
+---
+
+## Phase 8 : Multi-Modal Data Loading
+
+Load
+
+### Optical
+
+Sentinel-2
+
+### SAR
+
+Sentinel-1
+
+### Elevation
+
+DEM
+
+All datasets are aligned spatially before inference.
+
+---
+
+## Phase 9 : Feature Encoding
+
+Each modality has an independent encoder.
+
+### Optical Encoder
+
+Extract
+
+- RGB Features
+- Vegetation Features
+- Texture
+
+---
+
+### SAR Encoder
+
+Extract
+
+- Surface Roughness
+- Moisture Information
+- Structural Features
+
+---
+
+### DEM Encoder
+
+Extract
+
+- Elevation
+- Terrain
+- Slope
+- Aspect
+
+---
+
+## Phase 10 : Multi-Modal Fusion
+
+All extracted features are fused into a unified representation.
+
+Fusion combines
+
+```
+Optical Features
++
+SAR Features
++
+DEM Features
+=
+Unified Feature Vector
+```
+
+---
+
+## Phase 11 : AI Inference Pipeline
+
+PyTorch performs inference for
+
+- Building Detection
+- Road Detection
+- Water Segmentation
+- Vegetation Segmentation
+- NDVI Estimation
+- Terrain Classification
+
+Supported models
+
+- UNet
+- DeepLabV3+
+- SegFormer
+- Mask R-CNN
+- YOLO
+
+---
+
+## Phase 12 : Post Processing
+
+Perform
+
+- Merge Tiles
+- Geo Referencing
+- Raster Cleanup
+- Polygon Extraction
+- GeoJSON Conversion
+
+Output
+
+```
+GeoTIFF
+GeoJSON
+Masks
+```
+
+---
+
+## Phase 13 : Analytics Engine
+
+Generate
+
+- Vegetation Percentage
+- Building Count
+- Road Length
+- Water Area
+- NDVI Statistics
+- Terrain Statistics
+- Cloud Coverage
+
+---
+
+## Phase 14 : Report Generation
+
+Automatically generate
+
+- PDF Report
+- CSV
+- GeoJSON
+- Prediction Images
+
+---
+
+## Phase 15 : Dashboard
+
+Display
+
+- Uploaded Images
+- Satellite Layers
+- AI Predictions
+- Statistics
+- Interactive Maps
+- Download Reports
+
+---
+
+# Project Structure
+
+```
+Satya-neo
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── assets/
+│
+├── backend/
+│   ├── authentication/
+│   ├── api/
+│   ├── upload/
+│   ├── pipeline/
+│   │
+│   ├── validation.py
+│   ├── metadata.py
+│   ├── preprocessing.py
+│   ├── cloud_detection.py
+│   ├── cloud_removal.py
+│   ├── tiling.py
+│   ├── inference.py
+│   ├── postprocessing.py
+│   ├── analytics.py
+│   └── report.py
+│
+├── ml/
+│   ├── optical_encoder.py
+│   ├── sar_encoder.py
+│   ├── dem_encoder.py
+│   ├── fusion.py
+│   ├── models/
+│   └── weights/
+│
+├── datasets/
+│
+├── media/
+│   ├── raw/
+│   ├── processed/
+│   ├── masks/
+│   └── reports/
+│
+├── notebooks/
+│
+├── docs/
+│
+├── requirements.txt
+│
+└── README.md
+```
+
+---
+
+# Technology Stack
+
+## Frontend
+
+- React.js
+- Tailwind CSS
+- Axios
+- Leaflet / OpenLayers
+
+## Backend
+
+- Django
+- Django REST Framework
+- Celery
+- Redis
+
+## AI/ML
+
+- PyTorch
+- TorchVision
+- Rasterio
+- GDAL
+- OpenCV
+- NumPy
+- GeoPandas
+- Shapely
+
+## Database
+
+- PostgreSQL
+- PostGIS
+
+## Deployment
+
+- Docker
+- Nginx
+- Gunicorn
+- GitHub Actions
+
+---
+
+# Future Roadmap
+
+- ✅ Real-time satellite ingestion
+- ✅ Change detection
+- ✅ Disaster assessment
+- ✅ Flood mapping
+- ✅ Wildfire monitoring
+- ✅ Crop health analysis
+- ✅ Land use and land cover classification
+- ✅ Multi-temporal image comparison
+- ✅ Large Language Model (LLM) assisted satellite analytics
