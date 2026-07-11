@@ -419,7 +419,7 @@ h6 {
 /* Premium Wide Layout for Enterprise Portals */
 @media (min-width: 1400px) {
   .container {
-    max-width: 1400px !important;
+    max-width: 1640px !important;
   }
 }
 
