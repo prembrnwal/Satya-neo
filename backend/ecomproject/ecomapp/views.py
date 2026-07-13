@@ -97,7 +97,10 @@ def registerUser(request):
         serialize=UserSerializerWithToken(user,many=False)
         return Response(serialize.data)
     except Exception as e:
-        message={'details':e}
+        if "unique" in str(e).lower():
+            message = {'detail': 'User with this email already exists'}
+        else:
+            message = {'detail': str(e)}
         print(e)
         return Response(message,status=status.HTTP_400_BAD_REQUEST)
 
